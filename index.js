@@ -4,7 +4,7 @@ const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 //middleware
 app.use(cors());
@@ -27,8 +27,9 @@ async function run(){
         // GET singel ID 
         app.get('/services/:id',async(req,res) =>{
             const id = req.params.id;
-            const query = {_id:ObjectId(id)};
+            const query = {_id: ObjectId(id)};
             const service = await serviceCollection.findOne(query);
+            res.json(service);
         })
         
         // post api 
@@ -40,6 +41,14 @@ async function run(){
             console.log(result);
             res.json(result)
         })
+        // Delete API 
+        app.delete('/services/:id',async(req,res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await serviceCollection.deleteOne(query);
+            res.json(result)
+        })
+
 
       }
       finally{
